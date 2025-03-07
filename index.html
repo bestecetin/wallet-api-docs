@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DijiPratik API Dokümantasyonu</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 280px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-right: 2px solid #ddd;
+        }
+        .menu-item {
+            cursor: pointer;
+            font-weight: bold;
+            padding: 12px;
+            background: #e9ecef;
+            margin-top: 8px;
+            border-radius: 5px;
+            transition: background 0.3s;
+            font-size: 14px;
+
+        }
+        .menu-item:hover {
+            background: #949494;
+            color: white;
+        }
+        .submenu {
+            display: none;
+            padding-left: 15px;
+            margin-top: 5px;
+
+        }
+        .submenu a {
+            display: block;
+            text-decoration: none;
+            color: #ff0000;
+            padding: 6px 0;
+            font-size: 12px;
+        }
+        .submenu a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #ffffff;
+        }
+        /* Tabloların görünümünü iyileştir */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #CBCBCB;
+        }
+        th {
+            background-color: #ff0000;
+            color: white;
+        }
+        /* Kod bloklarının görünümünü iyileştir */
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-size: 12px;
+        }
+        code {
+            font-family: Consolas, "Courier New", monospace;
+        }
+        h2, h3 {
+            margin-top: 20px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #CBCBCB;
+        }
+        p, ul, ol {
+            margin-bottom: 14px;
+        }
+        .logo {
+            width: 150px; /* Logonun genişliği */
+            display: block;
+            margin: 0 auto 20px auto; /* Ortalamak ve aşağı boşluk bırakmak */
+        }
+     
+        a {
+            color: #007bff; /* Mavi tonu */
+            text-decoration: none; /* Alt çizgiyi kaldırmak için */
+            font-weight: bold; /* Kalın yaparak vurgulamak için */
+        }
+
+        a:hover {
+            color: #0056b3; /* Üzerine gelindiğinde koyu mavi */
+            text-decoration: underline; /* Hover durumunda alt çizgi */
+        }
+        .menu-item a {
+            display: block;
+            text-decoration: none; /* Altı çizili olmasını kaldırır */
+            color: black; /* Link rengini beyaz yapar (butonla aynı renk) */
+        }
+
+        .menu-item a:hover {
+            color: white; /* Hover efekti butonla uyumlu olacak */
+        }
+
+    
+
+
+    </style>
+    <script>
+        function toggleMenu(menuId) {
+            var menu = document.getElementById(menuId);
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+
+        async function loadMarkdown(mdFile) {
+            try {
+                const response = await fetch(mdFile);
+                if (!response.ok) {
+                    throw new Error(`Markdown dosyası yüklenemedi: ${mdFile}`);
+                }
+                const markdownText = await response.text();
+                document.getElementById('markdown-content').innerHTML = marked.parse(markdownText);
+            } catch (error) {
+                console.error("Markdown yükleme hatası:", error);
+                document.getElementById('markdown-content').innerHTML = `<p style="color:red;">Hata: Markdown dosyası bulunamadı (${mdFile})!</p>`;
+            }
+        }
+
+        // Sayfa ilk açıldığında main.md yükle
+        document.addEventListener("DOMContentLoaded", function() {
+            loadMarkdown('docs/main.md');
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <img src="logo.png" alt="DijiPratik Logo" class="logo">
+            <div class="menu-item"><a href="#" onclick="loadMarkdown('docs/main.md')">Genel Bilgiler</a></div>
+            <div class="menu-item" onclick="toggleAndLoad('auth-menu', 'docs/main-login.md')">Oturum</div>
+            <div id="auth-menu" class="submenu">
+                <a href="#" onclick="loadMarkdown('docs/login.md')">Login</a> 
+                <a href="#" onclick="loadMarkdown('docs/set-security-image.md')">Set Security Image</a> 
+            </div>
+            <div class="menu-item" onclick="toggleAndLoad('auth-menu2', 'docs/add-user.md')">Hesap Oluşturma</div>
+            <div id="auth-menu2" class="submenu">
+                <a href="#" onclick="loadMarkdown('docs/register.md')">Register</a> 
+                <a href="#" onclick="loadMarkdown('docs/add-phone.md')">Add Phone Number</a> 
+                <a href="#" onclick="loadMarkdown('docs/add-email.md')">Add E-mail</a> 
+                <a href="#" onclick="loadMarkdown('docs/add-password.md')">Add Password</a> 
+            </div>
+            <div class="menu-item" onclick="toggleMenu('contracts-menu')">Sözleşmeler</div>
+            <div id="contracts-menu" class="submenu">
+                <a href="#" onclick="loadMarkdown('docs/get-all-contracts.md')">Get All Contract User</a>
+                <a href="#" onclick="loadMarkdown('docs/add-contracts.md')">Add Contracts Log</a>
+                <a href="#" onclick="loadMarkdown('docs/confirm-contract-if-opened.md')">Confirm Contract If Opened</a>
+                <a href="#" onclick="loadMarkdown('docs/confirm-contract.md')">Confirm Contract</a>
+            </div>
+            <div class="menu-item" onclick="toggleMenu('otp-menu')">OTP İşlemleri</div>
+            <div id="otp-menu" class="submenu">
+                <a href="#" onclick="loadMarkdown('docs/validate-otp-phone.md')">Validate OTP Phone Number</a>
+                <a href="#" onclick="loadMarkdown('docs/validate-otp-email.md')">Validate OTP Email</a>
+            </div>
+            <div class="menu-item" onclick="toggleMenu('kyc-menu')">Kimlik Doğrulama</div>
+            <div id="kyc-menu" class="submenu">
+                <a href="#" onclick="loadMarkdown('docs/save-info.md')">Save Info</a>
+                <a href="#" onclick="loadMarkdown('docs/validate-address.md')">Validate Address</a>
+                <a href="#" onclick="loadMarkdown('docs/start-session.md')">Start Session</a>
+            </div>
+            <div class="menu-item" onclick="toggleMenu('wallet-menu')">Cüzdan</div>
+            <div id="wallet-menu" class="submenu">
+                <a href="#" onclick="loadMarkdown('docs/card-assign.md')"> Create Virtual Card</a>
+                <a href="#" onclick="loadMarkdown('docs/create-prepaidcard.md')">Assign Physical Card</a>
+                <a href="#" onclick="loadMarkdown('docs/list-cards.md')">List Cards</a>
+                <a href="#" onclick="loadMarkdown('docs/wallet-list.md')">Wallet List</a>
+                <a href="#" onclick="loadMarkdown('docs/wallet-transactions.md')">Transaction List</a>
+            </div>
+        </div>
+        <div class="content">
+            <div id="markdown-content">Markdown içeriği burada yüklenecek...</div>
+        </div>
+    </div>
+    <script>
+    function toggleAndLoad(menuId, mdFile) {
+        // Menü aç/kapat
+        toggleMenu(menuId);
+        // Markdown dosyasını yükle
+        loadMarkdown(mdFile);
+    }
+    </script>
+</body>
+</html> 
